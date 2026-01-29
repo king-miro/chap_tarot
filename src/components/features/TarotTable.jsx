@@ -97,7 +97,7 @@ const TarotTable = ({ step, onShuffleComplete, onCardSelect, selectedCount, sele
                   className="card-item"
                   onClick={() => onCardSelect(card.id)}
                 >
-                  <img src="/images/card_back.png" className="card-back-img" alt="card" />
+                  <img src={cardBackImage} className="card-back-img" alt="card" />
                 </div>
               ))}
           </div>
