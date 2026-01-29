@@ -1,0 +1,82 @@
+/* Tarot Card Frame Styles */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Press+Start+2P&display=swap');
+
+.tarot-card-frame {
+    position: relative;
+    width: 100%;
+    padding-bottom: 175%;
+    /* Aspect Ratio 4:7 (400:700 = 1.75) */
+    background-color: #f3e5ab;
+    /* Cream/Beige Background (The Border Color) */
+    border-radius: 12px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 4px solid #2a2a2a;
+    /* Outer dark border */
+}
+
+/* Inner Container for Content */
+.tarot-card-inner {
+    position: absolute;
+    top: 6%;
+    /* Top Border Thickness */
+    bottom: 10%;
+    /* Bottom label area */
+    left: 6%;
+    /* Side Border Thickness */
+    right: 6%;
+    background: white;
+    /* Behind the image */
+    border: 2px solid #2a2a2a;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The Illustration */
+.tarot-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* or contain, depending on if user gives exact ratio */
+    image-rendering: pixelated;
+    /* Essential for pixel art! */
+}
+
+/* Top Roman Numeral */
+.tarot-card-roman {
+    position: absolute;
+    top: 1.5%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    /* Quick pixel font or Cinzel */
+    font-size: 0.8rem;
+    color: #2a2a2a;
+    z-index: 10;
+}
+
+/* Bottom Name */
+.tarot-card-name {
+    position: absolute;
+    bottom: 2.5%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.7rem;
+    /* Small for long names */
+    line-height: 1.2;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    padding: 0 4px;
+    z-index: 10;
+}
+
+/* Reverse Mode Style */
+.tarot-card-frame.reversed {
+    transform: rotate(180deg);
+}
