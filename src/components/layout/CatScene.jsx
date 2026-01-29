@@ -55,7 +55,9 @@ const CatScene = ({ message = "야옹...", loadingText = "목소리 가다듬는
 
         // Delay audio slightly
         const timer = setTimeout(() => {
-          playAudio(message);
+          if (!skipAudio && !message?.skipAudio) {
+            playAudio(message);
+          }
         }, 500);
         return () => clearTimeout(timer);
       }

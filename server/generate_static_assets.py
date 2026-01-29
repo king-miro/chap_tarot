@@ -42,7 +42,13 @@ ui_scripts = {
     "category_select": "무엇이 고민이냥? 연애? 금전? 한번 골라보라냥!",
     "shuffle": "좋아, 카드를 섞어보겠다냥... 마음을 담아서 집중하라냥!",
     "select_card": "신중하게... 운명의 카드 4장을 골라보라냥!",
-    "reading_start": "흐음... 어디 보자... 별들의 이야기를 들어보자냥..."
+    "reading_start": "흐음... 어디 보자... 별들의 이야기를 들어보자냥...",
+    "chat_intro": "결과에 대해 궁금한게 있다면 물어봐!",
+    "reaction_hmm": "흐음...",
+    "reaction_oho": "오호...",
+    "reaction_haha": "하하...",
+    "reaction_um": "음...",
+    "reaction_hoo": "호오..."
 }
 
 # 5. Execution

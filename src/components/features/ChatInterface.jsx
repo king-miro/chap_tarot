@@ -28,9 +28,24 @@ const ChatInterface = ({ onSendMessage }) => {
         "그건 시간이 해결해줄 걸세.",
         "자네의 직감이 답을 알고 있을 텐데?"
       ];
+
+      const reactions = [
+        { text: "흐음...", file: "ui/reaction_hmm.wav" },
+        { text: "오호...", file: "ui/reaction_oho.wav" },
+        { text: "하하...", file: "ui/reaction_haha.wav" },
+        { text: "음...", file: "ui/reaction_um.wav" },
+        { text: "호오...", file: "ui/reaction_hoo.wav" }
+      ];
+
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
+
       setMessages(prev => [...prev, { role: 'cat', text: randomResponse }]);
-      playAudio(randomResponse);
+
+      // Play short reaction audio for effect using static file
+      const audio = new Audio(`/audio/${randomReaction.file}`);
+      audio.volume = 0.5;
+      audio.play().catch(e => console.warn("Reaction play failed", e));
     }, 1000);
   };
 

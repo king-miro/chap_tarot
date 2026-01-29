@@ -6,8 +6,8 @@
     width: 100%;
     padding-bottom: 175%;
     /* Aspect Ratio 4:7 (400:700 = 1.75) */
-    background-color: #f3e5ab;
-    /* Cream/Beige Background (The Border Color) */
+    /* background-color: #f3e5ab; Removed yellow background */
+    background-color: transparent;
     border-radius: 12px;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;

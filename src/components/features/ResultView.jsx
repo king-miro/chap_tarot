@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TarotCard from '../common/TarotCard';
 import { useTTS } from '../../hooks/useTTS';
 import { getCardInfo as getCardData } from '../../utils/cardUtils';
+import { tarotScripts } from '../../utils/tarotScripts';
 
 // Helper to get meaning text (Temporary placeholder logic until we have full DB)
 const getMeaning = (id, isReversed) => {
@@ -12,36 +13,28 @@ const getMeaning = (id, isReversed) => {
   return `${info.name} (${direction})\n당신의 상황에 중요한 메시지를 던지고 있습니다.`;
 };
 
-const ResultView = ({ selectedCards, onComplete }) => {
+const ResultView = ({ selectedCards, onComplete, onMessageChange }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [viewState, setViewState] = useState('decide'); // 'decide' (rotate) or 'reveal' (reading)
   const [orientations, setOrientations] = useState({}); // { cardId: boolean (isReversed) }
   const [isFlipped, setIsFlipped] = useState(false);
+  const currentAudioRef = useRef(null);
 
   const { playAudio } = useTTS();
+
+  // Cleanup audio on unmount
+  useEffect(() => {
+    return () => {
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+      }
+    };
+  }, []);
 
   const currentCardId = selectedCards[currentIndex];
   const isReversed = orientations[currentCardId] || false;
 
-  // Audio Effect on Reveal
-  useEffect(() => {
-    if (viewState === 'reveal') {
-      const text = getMeaning(currentCardId, isReversed);
-      // Play audio (Assuming we have generated files. If not, this might fallback or silent fail)
-      // For now, playing the generated text or file.
-      // Since we have static files, useTTS might need to support static file playback path?
-      // Or we just play the text via TTS API if static not valid?
-      // User has static files. We should play file 'public/audio/cards/{filename}.wav'
-
-      const info = getCardData(currentCardId);
-      const audioPath = `/audio/cards/${info.filename}.wav`;
-      const audio = new Audio(audioPath);
-      audio.play().catch(e => console.log("Audio play failed or file missing", e));
-
-      // Fallback: If we want to use the TTS hook (which might do API calls), usage is `playAudio(text)`.
-      // But we are in "Static Mode". Direct Audio object is better for verified files.
-    }
-  }, [viewState, currentCardId, isReversed]);
+  // Audio Effect processed in specific handlers now for immediate feedback
 
   const handleRotate = () => {
     setOrientations(prev => ({
@@ -51,6 +44,32 @@ const ResultView = ({ selectedCards, onComplete }) => {
   };
 
   const handleConfirm = () => {
+    // Stop previous audio if any
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+    }
+
+    // Play Audio Immediately on user interaction
+    const info = getCardData(currentCardId);
+    const reversed = orientations[currentCardId] || false;
+    // Map filename to potential reverse audio
+    const filename = `${info.filename}${reversed ? "_reversed" : ""}`;
+    const audioPath = `/audio/cards/${filename}.wav`;
+    const scriptText = tarotScripts[filename] || "별들의 목소리가 들리지 않는다냥...";
+
+    const audio = new Audio(audioPath);
+    currentAudioRef.current = audio; // Store reference
+    audio.volume = 0.6;
+    audio.play().catch(e => console.warn("Card audio play failed", e));
+
+    if (onMessageChange) {
+      onMessageChange({
+        text: scriptText,
+        skipAudio: true // Tell CatScene not to play this, we played it manually
+      });
+    }
+
     setViewState('reveal');
     setIsFlipped(true); // Trigger CSS Flip
   };
@@ -141,6 +160,7 @@ const ResultView = ({ selectedCards, onComplete }) => {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center; /* Center vertically */
           padding: 10px;
           color: white;
         }
@@ -175,7 +195,9 @@ const ResultView = ({ selectedCards, onComplete }) => {
         .dot.completed { background: var(--color-primary); }
 
         .main-card-stage {
-          flex: 1;
+          /* flex: 1; Removed to compact layout */
+          flex: 0 0 auto; /* Don't grow */
+          margin-bottom: 0px; /* No gap */
           display: flex;
           justify-content: center;
           align-items: center;
@@ -184,8 +206,8 @@ const ResultView = ({ selectedCards, onComplete }) => {
         }
 
         .flip-card-container {
-          width: 280px; /* Large View */
-          aspect-ratio: 4/7;
+          width: 240px; /* Reduced from 280px to save space */
+          aspect-ratio: 3/5; /* Slightly less tall ratio (approx 1.66 vs 1.75) */
           position: relative;
         }
 
@@ -217,7 +239,7 @@ const ResultView = ({ selectedCards, onComplete }) => {
         }
 
         .controls-area {
-          margin-top: 20px;
+          margin-top: -30px; /* Negative margin to pull buttons up */
           width: 100%;
           max-width: 400px;
           display: flex;

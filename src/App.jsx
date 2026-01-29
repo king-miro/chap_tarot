@@ -42,7 +42,12 @@ function App() {
     setGameState(prev => ({ ...prev, category, step: 'shuffle' }));
   };
 
+  // Dynamic message override for Result view card meanings
+  const [specialCatMessage, setSpecialCatMessage] = useState(null);
+
   const getCatMessage = () => {
+    if (specialCatMessage) return specialCatMessage;
+
     switch (gameState.step) {
       case 'intro': return {
         text: "어서오게냥! 여행자여, 이름이 무엇이냥?",
@@ -64,7 +69,10 @@ function App() {
         text: "흐음... 어디 보자... 별들의 이야기를 들어보자냥...",
         file: "ui/reading_start.wav"
       };
-      case 'chat': return "더 궁금한 게 있냥?";
+      case 'chat': return {
+        text: "결과에 대해 궁금한게 있다면 물어봐!",
+        file: "ui/chat_intro.wav"
+      };
       default: return "야옹...";
     }
   };
@@ -77,12 +85,20 @@ function App() {
     <>
       <BackgroundMusic />
       {!hasStarted ? (
-        <StartScreen onStart={() => setHasStarted(true)} />
+        <StartScreen onStart={() => {
+          setHasStarted(true);
+          // Play intro immediately on user interaction to bypass autoplay policy
+          const audio = new Audio('/audio/ui/intro.wav');
+          audio.volume = 0.4;
+          audio.play().catch(e => console.log("Manual intro play failed", e));
+        }} />
       ) : (
         <MainLayout>
           <CatScene
             message={getCatMessage()}
             loadingText={getLoadingText()}
+            // Skip checking the effect for 'intro' since we played it manually
+            skipAudio={gameState.step === 'intro'}
           />
 
           <div className="game-content">
@@ -118,7 +134,11 @@ function App() {
             {gameState.step === 'reading' && (
               <ResultView
                 selectedCards={gameState.selectedCards}
-                onComplete={() => setGameState(prev => ({ ...prev, step: 'chat' }))}
+                onMessageChange={setSpecialCatMessage}
+                onComplete={() => {
+                  setSpecialCatMessage(null);
+                  setGameState(prev => ({ ...prev, step: 'chat' }));
+                }}
               />
             )}
 
