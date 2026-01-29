@@ -26,12 +26,10 @@ const TarotCard = ({ id, isReversed = false, showBack = false, onClick, style })
     // Image Source Logic:
     // 1. Try Custom Image (Requires dynamic import or public folder structure)
     // For static sites without dynamic server, we stick to checking if file loads or default.
-    // Easiest is to point to `/assets/cards/custom/{filename}.png`
-    // If it fails, fallback? React standard img onError doesn't always work perfectly for replacing src.
-    // Strategy: Default to a generated pixel art placeholder if custom missing?
-    // User said they are making them. Let's assume standard names.
+    // Easiest is to point to `/assets/cards/custom/{filename}.png` => Moved to `/public/cards/custom`
 
-    const imageUrl = `/assets/cards/custom/${info.filename}.png`;
+    // Use public folder path (Vite serves /public at root /)
+    const imageUrl = `/cards/custom/${info.filename}.png`;
     // Or fallback to default placeholder if you have one.
 
     return (
@@ -51,9 +49,13 @@ const TarotCard = ({ id, isReversed = false, showBack = false, onClick, style })
                     alt={info.name}
                     onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "https://placehold.co/400x700/png?text=Pixel+Art+Missing"; // Fallback
+                        // Use card back as fallback, or a specific placeholder if available
+                        e.target.style.opacity = "0.5"; // Dim it to show it's a placeholder
+                        e.target.src = cardBackImg;
                     }}
                 />
+                {/* Overlay Text for missing art */}
+                <div className="missing-art-label" style={{ display: 'none' }}>Pixel Art Coming Soon</div>
             </div>
 
             {/* 3. English Name (Bottom) */}

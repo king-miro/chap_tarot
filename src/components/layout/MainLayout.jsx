@@ -50,7 +50,9 @@ const MainLayout = ({ children }) => {
           flex-direction: column;
           padding: 16px;
           position: relative;
-          z-index: 100; /* Ensure content is clickable above scanlines if needed */
+          z-index: 100;
+          overflow-y: auto; /* Allow scrolling for tall content */
+          overflow-x: hidden;
         }
       `}</style>
     </div>

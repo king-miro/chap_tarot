@@ -137,7 +137,7 @@ const ResultView = ({ selectedCards, onComplete }) => {
       <style>{`
         .result-container {
           width: 100%;
-          height: 100%;
+          min-height: 100%; /* Allow scrolling if content is tall */
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -225,6 +225,9 @@ const ResultView = ({ selectedCards, onComplete }) => {
           align-items: center;
           gap: 15px;
           min-height: 120px;
+          position: relative;
+          z-index: 100; /* Ensure it's above other elements */
+          pointer-events: auto; /* Ensure clickable */
         }
 
         .instruction {

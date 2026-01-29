@@ -3,7 +3,7 @@ import catSceneImage from '../../assets/images/cat_scene.png';
 import catBlinkImage from '../../assets/images/cat_blink.png';
 import { useTTS } from '../../hooks/useTTS';
 
-const CatScene = ({ message = "야옹...", loadingText = "목소리 가다듬는 중... 🎙️" }) => {
+const CatScene = ({ message = "야옹...", loadingText = "목소리 가다듬는 중... 🎙️", skipAudio = false }) => {
   const [isBlinking, setIsBlinking] = useState(false);
 
   // Typewriter effect state
@@ -25,21 +25,40 @@ const CatScene = ({ message = "야옹...", loadingText = "목소리 가다듬는
 
   const { playAudio, isLoading } = useTTS();
 
+  // Track previous message content to prevent duplicate audio triggers
+  const prevMessageContentRef = React.useRef("");
+
   useEffect(() => {
     if (message) {
-      // Process message to string
-      const text = Array.isArray(message)
-        ? message.map(m => (typeof m === 'object' ? m.text : m)).join(' ')
-        : message;
+      // Process message to string or object
+      let text = "";
+      let file = undefined;
 
-      setFullText(text);
-      setDisplayedText(''); // Reset display
+      if (Array.isArray(message)) {
+        text = message.map(m => (typeof m === 'object' ? m.text : m)).join(' ');
+      } else if (typeof message === 'object') {
+        text = message.text;
+        file = message.file;
+      } else {
+        text = message;
+      }
 
-      // Delay audio slightly
-      const timer = setTimeout(() => {
-        playAudio(message);
-      }, 500);
-      return () => clearTimeout(timer);
+      // Unique identifier for this message (text + file)
+      const messageId = `${text}|${file || ''}`;
+
+      // Only trigger if content changed
+      if (prevMessageContentRef.current !== messageId) {
+        prevMessageContentRef.current = messageId;
+
+        setFullText(text);
+        setDisplayedText(''); // Reset display
+
+        // Delay audio slightly
+        const timer = setTimeout(() => {
+          playAudio(message);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
     }
   }, [message, playAudio]);
 

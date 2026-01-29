@@ -25,10 +25,9 @@ SEED = 777
 def generate_and_save(filename, text, subfolder=""):
     path = os.path.join(OUTPUT_DIR, subfolder, f"{filename}.wav")
     if os.path.exists(path):
-        # Even if exists, we might want to overwrite if the script changed.
-        # But for speed, let's skip if user wants safe resume. 
-        # For this task, let's OVERWRITE to ensure 777 tone everywhere.
-        pass
+        # User requested optimization: Skip existing files
+        # print(f"Skipping {filename} (Exists)") 
+        return
 
     # print(f"Generating: {filename}") -> Handled by tqdm description
     torch.manual_seed(SEED)

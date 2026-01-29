@@ -12,6 +12,16 @@ export const useTTS = () => {
     const isPlayingRef = useRef(false);
     const isLoadingRef = useRef(false);
 
+    // Stop current audio
+    const stop = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            setIsPlaying(false);
+            isPlayingRef.current = false;
+        }
+    }, []);
+
     // API Base URL: Uses env var if set (for GH Pages + Ngrok), otherwise defaults to /api (for Local Dev Proxy)
     const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
@@ -60,6 +70,12 @@ export const useTTS = () => {
 
         // Helper function to play a single text item
         const playSingle = async (item) => {
+            // Stop any currently playing audio first (without killing the sequence state)
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+            }
+
             // Handle both string and object input
             const text = typeof item === 'object' ? item.text : item;
             // NEW: Support for static file playback

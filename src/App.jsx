@@ -98,6 +98,7 @@ function App() {
               <TarotTable
                 step={gameState.step}
                 selectedCount={gameState.selectedCards.length}
+                selectedCards={gameState.selectedCards} // Pass the array 
                 onShuffleComplete={() => setGameState(prev => ({ ...prev, step: 'select' }))}
                 onCardSelect={(cardId) => {
                   if (gameState.selectedCards.length < 4 && !gameState.selectedCards.includes(cardId)) {

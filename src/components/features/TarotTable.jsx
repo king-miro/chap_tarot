@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import cardBackImage from '../../assets/images/card_back.png';
 
-const TarotTable = ({ step, onShuffleComplete, onCardSelect, selectedCount }) => {
+const TarotTable = ({ step, onShuffleComplete, onCardSelect, selectedCount, selectedCards = [] }) => {
   const [deck, setDeck] = useState(Array.from({ length: 78 }, (_, i) => ({
     id: i,
     x: 0,
@@ -89,15 +89,17 @@ const TarotTable = ({ step, onShuffleComplete, onCardSelect, selectedCount }) =>
       {step === 'select' && (
         <div className="card-scroll-container">
           <div className="card-track">
-            {deck.map((card) => (
-              <div
-                key={card.id}
-                className="card-item"
-                onClick={() => onCardSelect(card.id)}
-              >
-                <img src={cardBackImage} className="card-back-img" alt="card" />
-              </div>
-            ))}
+            {deck
+              .filter(card => !selectedCards.includes(card.id))
+              .map((card) => (
+                <div
+                  key={card.id}
+                  className="card-item"
+                  onClick={() => onCardSelect(card.id)}
+                >
+                  <img src={cardBackImage} className="card-back-img" alt="card" />
+                </div>
+              ))}
           </div>
         </div>
       )}
@@ -195,8 +197,9 @@ const TarotTable = ({ step, onShuffleComplete, onCardSelect, selectedCount }) =>
 
         .card-track {
             display: flex;
-            padding: 0 50vw; /* Center the first card */
+            padding: 0 20px; /* Standard left padding */
             gap: 10px;
+            min-width: min-content; /* Ensure connection */
         }
 
         .card-item {
