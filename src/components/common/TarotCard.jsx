@@ -29,7 +29,7 @@ const TarotCard = ({ id, isReversed = false, showBack = false, onClick, style })
     // Easiest is to point to `/assets/cards/custom/{filename}.png` => Moved to `/public/cards/custom`
 
     // Use public folder path (Vite serves /public at root /)
-    const imageUrl = `/cards/custom/${info.filename}.png`;
+    const imageUrl = `cards/custom/${info.filename}.png`;
     // Or fallback to default placeholder if you have one.
 
     return (
