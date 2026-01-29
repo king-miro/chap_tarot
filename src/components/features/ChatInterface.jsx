@@ -43,7 +43,7 @@ const ChatInterface = ({ onSendMessage }) => {
       setMessages(prev => [...prev, { role: 'cat', text: randomResponse }]);
 
       // Play short reaction audio for effect using static file
-      const audio = new Audio(`/audio/${randomReaction.file}`);
+      const audio = new Audio(`audio/${randomReaction.file}`);
       audio.volume = 0.5;
       audio.play().catch(e => console.warn("Reaction play failed", e));
     }, 1000);

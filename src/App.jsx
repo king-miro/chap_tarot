@@ -88,7 +88,7 @@ function App() {
         <StartScreen onStart={() => {
           setHasStarted(true);
           // Play intro immediately on user interaction to bypass autoplay policy
-          const audio = new Audio('/audio/ui/intro.wav');
+          const audio = new Audio('audio/ui/intro.wav');
           audio.volume = 0.4;
           audio.play().catch(e => console.log("Manual intro play failed", e));
         }} />

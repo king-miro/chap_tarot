@@ -55,7 +55,7 @@ const ResultView = ({ selectedCards, onComplete, onMessageChange }) => {
     const reversed = orientations[currentCardId] || false;
     // Map filename to potential reverse audio
     const filename = `${info.filename}${reversed ? "_reversed" : ""}`;
-    const audioPath = `/audio/cards/${filename}.wav`;
+    const audioPath = `audio/cards/${filename}.wav`;
     const scriptText = tarotScripts[filename] || "별들의 목소리가 들리지 않는다냥...";
 
     const audio = new Audio(audioPath);

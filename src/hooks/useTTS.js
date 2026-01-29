@@ -93,7 +93,7 @@ export const useTTS = () => {
                     // Assume files are in /audio/ folder. If the argument is 'ui/intro.wav', full path is '/audio/ui/intro.wav'
                     // Or if full path is passed, just use it. Let's assume relative to public/audio for convenience or root.
                     // User provided path: `public/audio/ui`. So web access is `/audio/ui/...`
-                    audioUrl = `/audio/${staticFile}`;
+                    audioUrl = `audio/${staticFile}`;
                 }
                 // 1. Check local pre-fetch cache first
                 else if (text && audioCacheRef.current.has(text)) {
