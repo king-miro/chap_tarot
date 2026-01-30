@@ -9,11 +9,12 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? './' : '/',
   server: {
     host: '0.0.0.0', // Expose to network
+    // Proxy for Local Development (Backend ON)
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:5001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // /api/tts -> /tts
+        rewrite: (path) => path.replace(/^\/api/, ''),
       }
     }
   }

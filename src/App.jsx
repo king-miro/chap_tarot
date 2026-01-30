@@ -117,8 +117,13 @@ function App() {
                 selectedCards={gameState.selectedCards} // Pass the array 
                 onShuffleComplete={() => setGameState(prev => ({ ...prev, step: 'select' }))}
                 onCardSelect={(cardId) => {
-                  if (gameState.selectedCards.length < 4 && !gameState.selectedCards.includes(cardId)) {
-                    const newSelected = [...gameState.selectedCards, cardId];
+                  // [DEBUG MODE] Force Cup Cards (Ace, 2, 3, 4)
+                  // Cups IDs start at 36 (Ace), 37 (2), 38 (3), 39 (4)
+                  const debugCupIds = [36, 37, 38, 39, 40];
+                  const forcedId = debugCupIds[gameState.selectedCards.length] || cardId;
+
+                  if (gameState.selectedCards.length < 4 && !gameState.selectedCards.includes(forcedId)) {
+                    const newSelected = [...gameState.selectedCards, forcedId];
                     if (newSelected.length === 4) {
                       setTimeout(() => {
                         setGameState(prev => ({ ...prev, selectedCards: newSelected, step: 'reading' }));
